@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${title}">객체와 반복문</title>
+	<link rel="stylesheet" href="/css/table.css">
+</head>
+<body>
+	<h1>객체와 반복문</h1>
+	- 문법: th:each="약어 : ${데이터유형: 순회가능한 객체}"<br>
+	- ex)  th:each="l : ${userList}"<br>
+	- 반복범위: 태그 속성(th:each)을 추가했다면 추가한 태그가 닫힐 때까지<br> 
+	- 대상: 배열, 컬렉션 등 순회가능한 객체 | java 읽기전용 for문 => ex) for(User user : userList(대상)){}<br><br>
+	
+	<table>
+		<thead>
+			<tr>
+				<th>아이디</th>
+				<th>비밀번호</th>
+				<th>이름</th>
+				<th>권한</th>
+				<th>이메일</th>
+				<th>연락처</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="l : ${userList}">
+				<td th:text="${l.userId}"></td>
+				<td th:text="${l.userPw}"></td>
+				<td th:text="${l.userName}"></td>
+				<td th:text="${l.userGrade}"></td>
+				<td th:text="${l.userEmail}"></td>
+				<td>[[${l.userMobile}]]</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr th:each="l, status : ${userList}">
+				<td th:text="${status.index}">객체(배열, 컬렉션)의 인덱스</td>
+				<td th:text="${status.count}">객체(배열, 컬렉션)의 번호</td>
+				<td th:text="${status.size}">객체(배열, 컬렉션)의 크기</td>
+				<td th:text="${status.odd}">객체(배열, 컬렉션)의 홀수 여부반환(boolean)</td>
+				<td th:text="${status.even}">객체(배열, 컬렉션)의 짝수 여부반환(boolean)</td>
+				<td th:text="${status.first + '||' + status.last}">객체(배열, 컬렉션)의 첫번째 요소 혹은 마지막요소 여부 반환(boolean)</td>
+			</tr>
+		</tfoot>
+	</table>
+	<!--/* 단순 반복문 */-->
+	<!--/* thymeleaf에서 제공하는 유틸리티 #numbers : sequence(초기값, 종료값, 증감) => 숫자배열을 생성하는 메소드 */-->
+	<!--/* ex:) ${#numbers.sequence(1, 10, 1) => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] */-->
+	<label th:each="num : ${#numbers.sequence(1, 10, 1)}" 
+		   th:text="${num}"></label>
+	<!--/* 
+		<label th:each="num : ${#numbers.sequence(1, 10, 1)}">[[${num}]]</label>
+	*/-->
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+

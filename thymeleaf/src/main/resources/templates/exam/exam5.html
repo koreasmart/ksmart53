@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${title}">thymeleaf 링크표현과 쿼리스트링</title>
+	<link rel="stylesheet" href="/css/table.css" />
+</head>
+<body>
+	<h1>thymeleaf 링크 표현</h1>
+	- 문법 : th:href="@{path}" <br />
+	- 예시 : th:href="@{/css/table.css}" <br />
+	- 속성 : th:href, th:src etc <br />
+	
+	<div style="margin-bottom: 50px; margin-top: 30px;">
+		<a th:href="@{https://www.naver.com}" th:text="${'네이버로 이동'}">올바른 표현방법</a><br>
+		<a href="@{https://www.naver.com}" th:text="${'네이버로 이동'}">잘못된 표현방법</a><br>
+		<a th:href="@{/}" th:text="${'홈으로 이동'}">절대경로</a><br>
+		<a th:href="@{exam4}" th:text="${'exam4 이동'}">상대경로</a><br>
+		<a th:href="@{/exam/exam4}" th:text="${'exam4 이동'}">절대경로</a><br>
+	</div>
+	
+	<h1>쿼리스트링 표현방법</h1>
+	- 쿼리스트링 : URL의 뒤에 입력 데이터를 함께 제공하는 가장 단순한 데이터 전달 방법. <br />
+	            웹개발에서 데이터를 요청하는 방식 중 주로 GET방식으로 데이터를 요청할 때 쓰이는 방법 <br />
+	          	ex:) https://www.ksmart.or.kr?key=value&key=value
+	- 문법 : @{주소(key=${value},key=${value})}
+	- 예시 : @{/user/detail(userId=${userId})}
+	
+	<div style="margin-bottom: 50px; margin-top: 30px;" th:object="${userInfo}">
+		<a th:href="@{/user/detail(userId=${userInfo.userId})}">회원상세정보조회</a> <br />
+		<a th:href="@{/user/detail(userId=*{userId})}">회원상세정보조회</a> <br />
+		
+		<a th:href="@{/member/{userId}(userId=*{userId})}" th:text="|*{userId} '상세페이지 이동'|">rest 주소 표현방식</a>
+		<a th:href="@{|/member/*{userId}|}" th:text="|*{userId} [상세페이지 이동]'|">rest 주소 표현방식</a>
+	</div>
+	
+	<table>
+		<thead>
+			<tr>
+				<th>아이디</th>
+				<th>비밀번호</th>
+				<th>이름</th>
+				<th>권한</th>
+				<th>이메일</th>
+				<th>연락처</th>
+				<th>상세보기</th>
+				<th>상세보기</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${userList != null}"
+				th:each="l : ${userList}">
+				<td th:text="${l.userId}"></td>
+				<td th:text="${l.userPw}"></td>
+				<td th:text="${l.userName}"></td>
+				<td th:text="${l.userGrade}"></td>
+				<td th:text="${l.userEmail}"></td>
+				<td th:text="${l.userMobile}"></td>
+				<td>
+					<a th:href="@{/user/detail(userId=${l.userId})}">상세보기(쿼리스트링)</a>
+				</td>
+				<td>
+					<a th:href="@{|/member/${l.userId}|}">상세보기(path)</a>
+				</td>
+			</tr>
+			<th:block th:unless="${userList != null}">
+				<tr>
+					<td colspan="8">등록한 회원의 정보가 없습니다.</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</body>
+</html>

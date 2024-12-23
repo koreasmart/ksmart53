@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>실습문제</title>
+	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.target {
+			background-color : hotpink;
+			color : white;
+		}
+	</style>
+</head>
+<body th:object="${userInfo}">
+	<h1>실습문제</h1>
+	- 1. userList 객체를 바인딩 받아 회원 테이블을 완성하시오. <br />
+	- 2. userList 객체가 없을 시 '등록된 회원의 정보가 없습니다.' 행을 노출하시오. <br />
+	- 3. target 변수를 선언하고 userInfo의 id를 할당하시오. <br />
+	- 4. target 변수의 값과 일치하는 회원아이디일 경우 행의 색깔을 핫핑크로 글자색을 흰색으로 노출하시오. <br /><br />
+	
+	<table th:with="target=*{userId}">
+		<thead>
+			<tr>
+				<th>아이디</th>
+				<th>비밀번호</th>
+				<th>이름</th>
+				<th>권한</th>
+				<th>이메일</th>
+				<th>연락처</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!--/*  
+			<tr th:if="${userList != null}"
+				th:each="l : ${userList}"
+				th:style="${l.userId == target ? 'background-color:hotpink; color: white' : ''}">
+			*/-->
+			<tr th:if="${userList != null}"
+				th:each="l : ${userList}"
+				th:classappend="${l.userId == target} ? 'target'">
+				<td th:text="${l.userId}"></td>
+				<td th:text="${l.userPw}"></td>
+				<td th:text="${l.userName}"></td>
+				<td th:text="${l.userGrade}"></td>
+				<td th:text="${l.userEmail}"></td>
+				<td th:text="${l.userMobile}"></td>
+			</tr>
+			<th:block th:unless="${userList != null}">
+				<tr>
+					<td colspan="6">등록한 회원의 정보가 없습니다.</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+</body>
+</html>

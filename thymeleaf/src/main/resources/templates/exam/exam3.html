@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${title}">thymeleaf 조건문과 지역변수</title>
+	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.text{
+			background-color: hotpink;
+		}
+		.text-white {
+			color : white;
+		}
+		.text-blue {
+			color : blue;
+		}
+		.text-green {
+			color : green;
+		}
+	</style>
+</head>
+<body>
+	<h1>thymeleaf 조건문</h1>
+	- 종류 : th:if, th:unless, th:switch <br>
+	- 문법예시 : th:if="${조건문}" => th:if="${userInfo != null}", th:unless="${userInfo != null}"<br />
+	
+	<h1>thymeleaf 지역변수</h1>
+	- 문법 : th:with <br />
+	- 문법예시 : th:with="지역변수명=${데이터},key=value" <br />
+	- 유효범위 : 속성(th:with)을 정의한 태그가 닫힐 때까지 <br />
+	
+	<h1>객체 바인딩</h1>
+	- 문법: th:object <br />
+	- 문법예시 :  th:object="${Model객체에 추가한 데이터 key}" => th:text="*{객체의 속성}" <br />
+	- 유효범위 : 속성(th:object)을 정의한 태그가 닫힐 때까지 객체참조 가능<br />
+	<br /><br />
+	
+	<table>
+		<thead>
+			<tr>
+				<th>아이디</th>
+				<th>비밀번호</th>
+				<th>이름</th>
+				<th>권한</th>
+				<th>이메일</th>
+				<th>연락처</th>
+			</tr>
+		</thead>
+		<tbody th:with="target1=${userInfo.userId}, target2=${'pw002'}"
+			   th:object="${userInfo}">
+			<tr th:if="${userList != null}"
+				th:each="l : ${userList}">
+
+				<td th:if="${l.userId == target1}"
+					th:text="${l.userId}" 
+					th:style="${l.userGrade == '관리자' ? 'color:red;' : 'color: blue;'}"></td>
+				<td th:unless="${l.userId} == *{userId}"
+					th:text="${l.userId}"
+					th:style="${l.userGrade == '관리자' ? 'color:red;' : 'color: blue;'}"></td>
+				
+				<!--/* 
+				<td th:if="${l.userPw == target2}"
+					th:text="${l.userPw}"
+					style="color:green;"></td>
+				<td th:unless="${l.userPw == target2}"
+					th:text="${l.userPw}"></td>
+				*/-->
+				<td th:text="${l.userPw}"
+					th:style="${l.userPw == target2 ? 'color:green;' : ''}"></td>
+				
+				<td th:text="${l.userName}"></td>
+				<!--/*
+					switch(값){    ==  th:block
+						case '값': <td></td>
+							break;
+						default : == th:case="*" 
+					}
+				 */-->
+				<th:block th:switch="${l.userGrade}">				
+					<td th:case="${'관리자'}" th:text="${l.userGrade}" class="text text-white"></td>
+					<td th:case="*" th:text="${l.userGrade}"
+						class="text" th:classappend="${(l.userGrade == '판매자') ? 'text-blue' : 'text-green'}"></td>
+				</th:block>
+				
+				<td th:text="${l.userEmail}"></td>
+				<td th:text="${l.userMobile}"></td>
+			</tr>
+			<th:block th:unless="${userList != null}">			
+				<tr>
+					<td colspan="6">등록된 회원의 정보가 없습니다.</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	
+	<!--/* th:object 정의한 태그를 벗어난 경우 참조 불가능  */-->
+	<label th:text="*{userName}"></label>
+	
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
