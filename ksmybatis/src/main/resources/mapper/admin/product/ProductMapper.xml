@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ksmybatis.admin.product.mapper.ProductMapper">
+
+	<!-- Product 클래스와 매핑 -->
+	<resultMap type="Product" id="productResultMap">
+		<id 	column="prod_cd" 		property="productCode"/>
+		<result column="vend_cd" 		property="vendorCode"/>
+		<result column="prod_name" 		property="productName"/>
+		<result column="prod_untprc" 	property="productPrice"/>
+		<result column="prod_reg_date" 	property="productRegDate"/>
+		
+		<!-- 1:1 관계 association -->
+		<association property="vendorInfo" javaType="Vendor">
+			<id 	column="vend_cd" 		property="vendorCode"/>
+			<result column="vend_mbr_id" 	property="vendorMemberId"/>
+			<result column="vend_brno" 		property="vendorBrno"/>
+			<result column="vend_name" 		property="vendorName"/>
+			<result column="vend_addr" 		property="vendorAddr"/>
+			<result column="vend_daddr" 	property="vendorDetailAddr"/>
+			<result column="vend_zip" 		property="vendorZip"/>
+			<result column="vend_telno" 	property="vendorTelno"/>
+		</association>
+	</resultMap>
+	
+	<delete id="removeProductBySellerId" parameterType="string">
+		/* 상품삭제 */
+		DELETE  
+			p
+		FROM
+			vendors v INNER JOIN products p
+			USING(vend_cd)
+		WHERE 
+			v.vend_mbr_id = #{sellerId};
+	</delete>
+	
+	<!-- 상품목록 조회 -->
+	<select id="getProductList" resultMap="productResultMap">
+		/* 상품목록 조회 */
+		SELECT
+			p.prod_cd,
+			v.vend_cd,
+			v.vend_name,
+			p.prod_name,
+			p.prod_untprc,
+			p.prod_reg_date
+		FROM
+			products p INNER JOIN vendors v
+			USING (vend_cd)
+		ORDER BY CAST(SUBSTRING_INDEX(prod_cd,'prod_',-1) AS UNSIGNED);
+	</select>
+</mapper>

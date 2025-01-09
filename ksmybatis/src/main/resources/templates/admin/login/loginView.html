@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	  
+	<head>
+		<meta name="description" content="ksmart53" />
+	</head>
+
+	<th:block layout:fragment="content-header">            	
+	    <div class="content-header">
+	        <div class="row">
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	            <p>로그인 관리</p>
+	        </div>
+	    </div>
+	</th:block>
+	<th:block layout:fragment="content-body">
+		<div class="card card-login">
+			<div class="card-body">
+				<form id="loginForm" th:action="@{/admin/login/loginPro}" method="post">
+					<div class="mb-3">
+						<input class="form-control" type="text" placeholder="회원아이디를 입력해주세요" 
+							   id="memberId" name="memberId" />
+					</div>
+					<!-- form-group// -->
+					<div class="mb-3">
+						<input class="form-control" placeholder="회원비밀번호를 입력해주세요" 
+						 	   type="text" id="memberPw" name="memberPw" />
+					</div>
+					<!-- form-group// -->
+					<div class="mb-3"></div>
+					<!-- form-group form-check .// -->
+					<div class="mb-4 d-flex justify-content-between">
+						<button type="button" id="loginBtn" class="btn btn-primary">로그인</button>
+						<a th:href="@{/admin}" class="btn btn-primary">메인화면으로</a>
+					</div>
+					<!-- form-group// -->
+				</form>
+			</div>
+		</div>
+	</th:block>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		const msg = /*[[${msg}]]*/ "msg";
+    		if(msg) alert(msg);
+    		//const message = /*[[${message}]]*/ "message";
+    		//if(message) alert(message);
+    		
+    		$('#loginBtn').click(function(){
+    			let isSubmit = true;
+    			$('#loginForm input').each((idx, item)=>{
+					const inputValue = $(item).val();
+					if(!inputValue){
+						isSubmit = false;
+						$(item).focus();
+						return false;
+					}
+    			});
+    			
+    			if(isSubmit) $('#loginForm').submit();
+    		});
+    		
+    	</script>
+    </th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+

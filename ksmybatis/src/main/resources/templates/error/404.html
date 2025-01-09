@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!-- Favicon -->
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{/manage/assets/imgs/theme/favicon.svg}" />
+	<!-- Template CSS -->
+	<link th:href="@{/manage/assets/css/main.css?v=1.1}" rel="stylesheet" type="text/css" />
+	<title>페이지 없음</title>
+</head>
+<body>
+	<section class="content-main">
+		<div class="row mt-60">
+			<div class="col-sm-12">
+				<div class="w-50 mx-auto text-center">
+					<img th:src="@{/manage/assets/imgs/theme/404.png}" width="350"
+						alt="Page Not Found">
+					<h3 class="mt-40 mb-15">Oops! Page not found</h3>
+					<p>It's looking like you may have taken a wrong turn. Don't
+						worry... it happens to the best of us. Here's a little tip that
+						might help you get back on track.</p>
+					<a th:href="@{|${homeUri}|}" class="btn btn-primary mt-4"><i
+						class="material-icons md-keyboard_return"></i> Back to main</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script th:src="@{/manage/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{/manage/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/manage/assets/js/vendors/select2.min.js}"></script>
+    <script th:src="@{/manage/assets/js/vendors/perfect-scrollbar.js}"></script>
+    <script th:src="@{/manage/assets/js/vendors/jquery.fullscreen.min.js}"></script>
+    <!-- Main Script -->
+    <script th:src="@{/manage/assets/js/main.js?v=1.1}" type="text/javascript"></script>
+</body>
+</html>

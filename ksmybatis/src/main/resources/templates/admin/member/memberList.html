@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+
+	<th:block layout:fragment="content-header">            	
+	    <div class="content-header">
+	        <div class="row">
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	            <p>회원 정보 관리</p>
+	        </div>
+	    </div>
+	</th:block>
+	<th:block layout:fragment="content-body">
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select" name="searchCate" id="searchCate">
+							<option value="id" th:selected="${'id' eq searchCate}">회원아이디</option>
+							<option value="name" th:selected="${'name' eq searchCate}">회원이름</option>
+							<option value="grade" th:selected="${'grade' eq searchCate}">회원등급</option>
+							<option value="email" th:selected="${'email' eq searchCate}">회원이메일</option>
+						</select>
+					</div>
+					<div class="col-lg-3 col-md-6 me-auto">
+						<div class="input-group">
+							<input type="text" class="form-control" id="searchValue" 
+								   name="searchValue" th:value="${searchValue}" placeholder="Search">
+							<button class="btn btn-light bg" id="searchBtn" type="button">
+								<i class="material-icons md-search"></i>
+							</button>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select list-size">
+							<option value="5" th:selected="${listSize eq 5}">Show 5</option>
+							<option value="10" th:selected="${listSize eq 10}">Show 10</option>
+							<option value="20" th:selected="${listSize eq 20}">Show 20</option>
+						</select>
+					</div>
+				</div>
+			</header>
+			<!-- card-header end// -->
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr class="text-center text-success">
+								<th>회원아이디</th>
+								<th>회원이름</th>
+								<th>회원등급</th>
+								<th>회원주소</th>
+								<th>회원상세주소</th>
+								<th>회원우편번호</th>
+								<th>회원연락처</th>
+								<th>회원이메일</th>
+								<th>회원등록일자</th>
+								<th>수정</th>
+								<th>탈퇴</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:if="${memberList != null}">
+								<tr th:each="l : ${memberList}" class="text-center">
+									<td th:text="${l.memberId}"></td>
+									<td th:text="${l.memberName}"></td>
+									<td th:text="${l.memberGrade}"></td>
+									<td th:text="${l.memberAddr}"></td>
+									<td th:text="${l.memberDetailAddr}"></td>
+									<td th:text="${l.memberZip}"></td>
+									<td th:text="${l.memberTelNo}"></td>
+									<td th:text="${l.memberEmail}"></td>
+									<td th:text="${l.memberRegDate}"></td>
+									<td>
+										<a th:href="@{/admin/member/modify(memberId=${l.memberId})}"
+										   class="btn btn-sm btn-outline-warning font-sm">수정</a>
+									</td>
+									<td>
+										<a th:href="@{/admin/member/remove(memberId=${l.memberId})}"
+										   class="btn btn-sm btn-outline-danger font-sm">탈퇴</a>
+									</td>
+								</tr>							
+							</th:block>
+							<th:block th:unless="${not #lists.isEmpty(memberList)}">
+								<tr>
+									<td colspan="11">등록된 회원의 정보가 없습니다.</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+					<!-- table-responsive.// -->
+				</div>
+			</div>
+			<!-- card-body end// -->
+		</div>
+	</th:block>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		
+    		$('.list-size').change(function(){
+    			const searchCate = $('#searchCate').val();
+    			const searchValue = $('#searchValue').val();
+    			const listSize = $(this).val();
+    			const $form = $('<form />', { 'action' : '/admin/member/searchList', 'method': 'post'});
+    			const $searchCate = 
+    					$('<input />', {'type':'hidden', 'name' : 'searchCate'}).val(searchCate);
+    			const $searchValue = 
+    					$('<input />', {'type':'hidden', 'name' : 'searchValue'}).val(searchValue);
+    			const $listSize = 
+    					$('<input />', {'type':'hidden', 'name' : 'listSize'}).val(listSize);
+    			$form.append($searchCate, $searchValue, $listSize);
+    			$('body').append($form);
+    			$form.submit();
+    		});
+    	
+    		$('#searchBtn').click(function(){
+    			const searchCate = $('#searchCate').val();
+    			const searchValue = $('#searchValue').val();
+    			const $form = $('<form />', { 'action' : '/admin/member/searchList', 'method': 'post'});
+    			const $searchCate = 
+    					$('<input />', {'type':'hidden', 'name' : 'searchCate'}).val(searchCate);
+    			const $searchValue = 
+    					$('<input />', {'type':'hidden', 'name' : 'searchValue'}).val(searchValue);
+    			$form.append($searchCate, $searchValue);
+    			$('body').append($form);
+    			$form.submit();
+    		});
+    	</script>
+    </th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+

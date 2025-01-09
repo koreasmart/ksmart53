@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ksmybatis.admin.login.mapper.LoginMapper">
+	<resultMap type="Member" id="loginHistoryMap">
+		<id 	column="mbr_id" 		property="memberId"/>
+		<result column="mbr_pw" 		property="memberPw" />
+		<result column="mbr_name" 		property="memberName" />
+		<result column="mbr_grd" 		property="memberGrade" />
+		<result column="mbr_grd_num"	property="memberGrdNum" />
+		<result column="mbr_addr" 		property="memberAddr" />
+		<result column="mbr_daddr" 		property="memberDetailAddr" />
+		<result column="mbr_zip" 		property="memberZip" />
+		<result column="mbr_telno" 		property="memberTelNo" />
+		<result column="mbr_email" 		property="memberEmail" />
+		<result column="mbr_reg_date" 	property="memberRegDate" />
+		
+		<!-- collection 1:N 관계매핑 -->
+		<collection property="loginHistory" ofType="LoginHistory">
+			<id column="login_no" property="loginNo" />
+			<result column="login_id" property="loginId" />
+			<result column="login_ip" property="loginIp" />
+			<result column="login_date" property="loginDate" />
+		</collection>
+	</resultMap>
+
+	<select id="getCntLoginHistory" resultType="int">
+		/* 로그인 이력 총 행의 갯수 */
+		SELECT 
+			COUNT(*) 
+		FROM
+			members_login_log
+	</select>
+
+	<select id="getLoginHistory" parameterType="Pageable" resultMap="loginHistoryMap">
+		/* 로그인 이력 */
+		SELECT
+			mll.login_no,
+			m.mbr_id,
+			m.mbr_name,
+			m.mbr_email,
+			mll.login_ip,
+			mll.login_date
+		FROM
+			members m INNER JOIN members_login_log mll
+			ON m.mbr_id = mll.login_id
+		ORDER BY login_date DESC
+		LIMIT #{rowPerPage} OFFSET #{offset};
+	</select>
+	
+	<delete id="removeLoginHistoryById" parameterType="string">
+		/* 로그인이력 삭제 */
+		DELETE  
+		FROM
+			members_login_log 
+		WHERE 
+			login_id = #{memberId};
+	</delete>
+	
+</mapper>

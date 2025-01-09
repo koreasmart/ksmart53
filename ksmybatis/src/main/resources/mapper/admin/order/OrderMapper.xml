@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ksmybatis.admin.order.mapper.OrderMapper">
+	<resultMap type="Order" id="orderResultMap">
+		<id 	column="order_no" 		property="orderNo"/>
+		<id 	column="order_item" 	property="orderItem" />
+		<result column="cust_id"		property="orderId" />
+		<result column="order_prod_cd" 	property="orderProductCode" />
+		<result column="order_cnt" 		property="orderAmount" />
+		<result column="order_date" 	property="orderRegDate" />
+	</resultMap>
+	
+	<delete id="removeOrderByOrderId" parameterType="string">
+		/* 주문이력 삭제 */
+		DELETE
+		FROM
+			orders
+		WHERE 
+			cust_id = #{orderId};
+	</delete>
+	
+	<delete id="removeOrderItemByNum" parameterType="list">
+		/* 주문번호 상세주문 삭제 */
+		DELETE
+		FROM
+			orderitems
+		WHERE
+			order_no IN
+			<foreach collection="list" item="orderNum" index="index" open="(" separator="," close=")">
+				#{orderNum}
+			</foreach>
+	</delete>
+	
+	<select id="getOrderNumListByOrderId" parameterType="string" resultType="int">
+		/* 구매자가 구매한 주문번호 조회 */
+		SELECT 
+			order_no
+		FROM 
+			orders
+		WHERE 
+			cust_id = #{orderId};
+	</select>
+	
+	<delete id="removeOrderBySellerId" parameterType="String">
+		/* 판매자가 등록한 상품의 구매이력 삭제 */
+		DELETE 
+			oi
+		FROM
+			vendors v INNER JOIN products p
+			USING(vend_cd)
+			INNER JOIN orderitems oi
+			ON p.prod_cd = oi.order_prod_cd
+		WHERE 
+			v.vend_mbr_id = #{sellerId};
+	</delete>
+	
+	<select id="getOrderListBySellerId" parameterType="String" resultMap="orderResultMap">
+		/* 판매자가 등록한 상품의 구매이력 조회 */
+		SELECT  
+			o.order_no,
+			oi.order_item,
+			o.cust_id,
+			oi.order_prod_cd,
+			oi.order_cnt,
+			o.order_date
+		FROM
+			vendors v INNER JOIN products p
+			USING(vend_cd)
+			INNER JOIN orderitems oi
+			ON p.prod_cd = oi.order_prod_cd
+			INNER JOIN orders o
+			USING (order_no)
+		WHERE 
+			v.vend_mbr_id = #{sellerId};
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

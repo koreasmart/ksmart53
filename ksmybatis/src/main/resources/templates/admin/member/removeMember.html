@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	  
+	<head>
+		<meta name="description" content="ksmart53" />
+	</head>
+
+	<th:block layout:fragment="content-header">            	
+	    <div class="content-header">
+	        <div class="row">
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	            <p>회원 정보 관리</p>
+	        </div>
+	    </div>
+	</th:block>
+	<th:block layout:fragment="content-body">
+		<div class="card card-login">
+			<div class="card-body">
+				<form id="removeMemberForm" th:action="@{/admin/member/remove}" method="post">
+					<div class="mb-3">
+						<input class="form-control" type="text" 
+							   id="memberId" name="memberId" th:value="${memberId}" />
+					</div>
+					<!-- form-group// -->
+					<div class="mb-3">
+						<input class="form-control" placeholder="회원비밀번호를 입력해주세요" 
+						 	   type="text" id="memberPw" name="memberPw" />
+					</div>
+					<!-- form-group// -->
+					<div class="mb-3"></div>
+					<!-- form-group form-check .// -->
+					<div class="mb-4 d-flex justify-content-between">
+						<button type="button" id="removeBtn" class="btn btn-danger">회원탈퇴</button>
+						<a th:href="@{/admin/member/list}" class="btn btn-primary">탈퇴취소</a>
+					</div>
+					<!-- form-group// -->
+				</form>
+			</div>
+		</div>
+	</th:block>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		//const msg = [[${msg}]];
+    		//if(msg) alert(msg);
+    		const message = /*[[${message}]]*/ "message";
+    		if(message) alert(message);
+    		
+    		$('#removeBtn').click(function(){
+    			let isSubmit = true;
+    			$('#removeMemberForm input').each((idx, item)=>{
+					const inputValue = $(item).val();
+					if(!inputValue){
+						isSubmit = false;
+						$(item).focus();
+						return false;
+					}
+    			});
+    			
+    			if(isSubmit) {
+    				if(confirm('정말로 삭제하시겠습니까?')){    					
+	    				$('#removeMemberForm').submit();
+    				}
+    			}
+    		});
+    		
+    	</script>
+    </th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+

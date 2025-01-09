@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+	  
+	<head>
+		<meta name="description" content="ksmart53" />
+	</head>
+
+	<th:block layout:fragment="content-header">            	
+	    <div class="content-header">
+	        <div class="row">
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	            <p>회원 정보 관리</p>
+	        </div>
+	    </div>
+	</th:block>
+	<th:block layout:fragment="content-body">
+		<form id="modifyMemberForm" th:action="@{/admin/member/modify}" method="post" th:object="${memberInfo}">
+			<th:block th:with="test=${queryParam}">
+				<h1 th:text="${test}"></h1>
+			</th:block>
+			<div class="row col-lg-6">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">					
+							<div class="col-md-12">
+								<label for="memberId" class="form-label">회원아이디</label>
+								<input type="text" class="form-control" 
+									   id="memberId" name="memberId" th:value="*{memberId}" readonly="readonly">
+							</div>
+						</div>
+						<div class="row mt-3">					
+							<div class="col-md-12">
+								<label for="memberPw" class="form-label">회원비밀번호</label>
+								<input type="text" class="form-control" 
+									   id="memberPw" name="memberPw" th:value="*{memberPw}">
+							</div>
+						</div>
+						<div class="row mt-3">					
+							<div class="col-md-12">
+								<label for="memberName" class="form-label">회원이름</label>
+								<input type="text" class="form-control" 
+									   id="memberName" name="memberName" th:value="*{memberName}">
+							</div>
+						</div>
+						<div class="row mt-3">					
+							<div class="col-md-12">
+								<label for="memberGrdNum" class="form-label">회원등급</label>
+								<select name="memberGrdNum" id="memberGrdNum" class="form-control text-center">
+									<option value="">회원등급을 선택해주세요</option>
+									<th:block th:if="${gradeList}"
+											  th:each="l, status : ${gradeList}">
+										<option th:value="${status.count}" 
+												th:text="${l.gradeName}"
+												th:selected="${status.count} == *{memberGrdNum}"></option>
+									</th:block>
+								</select>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-md-3">
+								<label for="memberZip" class="form-label">우편번호</label> 
+								<input type="text" class="form-control"
+									id="memberZip" name="memberZip" th:value="*{memberZip}">
+							</div>
+							<div class="col-md-4">
+								<button type="button" class="btn btn-primary mt-4" 
+									   id="findZip" value="우편번호찾기">우편번호찾기</button>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-md-12">
+								<label for="memberAddr" class="form-label">주소</label> 
+								<input type="text" class="form-control"  th:value="*{memberAddr}"
+									   id="memberAddr" name="memberAddr" readonly="readonly">
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-md-12">
+								<label for="memberDetailAddr" class="form-label">상세주소</label> 
+								<input type="text" class="form-control" th:value="*{memberDetailAddr}"
+									id="memberDetailAddr" name="memberDetailAddr">
+							</div>
+						</div>
+						<div class="row mt-3">					
+							<div class="col-md-12">
+								<label for="memberEmail" class="form-label">회원이메일</label>
+								<input type="text" class="form-control" 
+									   id="memberEmail" name="memberEmail" th:value="*{memberEmail}" />
+							</div>
+						</div> 
+						<div class="row mt-3">					
+							<div class="col-md-12">
+								<label for="memberTelNo" class="form-label">회원전화번호</label>
+								<input type="text" class="form-control" 
+									   id="memberTelNo" name="memberTelNo" th:value="*{memberTelNo}" />
+							</div>
+						</div>
+						<div class="row mt-4">					
+							<div class="col-md-12 text-end">
+								<button type="submit" id="modifyMemberBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">회원수정</button>
+								<a th:href="@{/admin/member/list}" id="cancelBtn" class="btn btn-light rounded font-sm mr-5 text-body hover-up">수정취소</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</th:block>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource">
+    	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    </th:block>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script>
+    		
+    		// 주소 찾기( daum api)
+    		$('#findZip').click(function(){
+    			new daum.Postcode({
+    	            oncomplete: function(data) {
+    	                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+    	                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+    	                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+    	                const roadAddr = data.roadAddress; // 도로명 주소 변수
+    	                const zoneCode = data.zonecode; // 도로명 주소 변수
+
+    	                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+    	                $('#memberZip').val(zoneCode);
+    	                $('#memberAddr').val(roadAddr);
+    	                
+    	            }
+    	        }).open();
+    		});
+    	</script>
+    </th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout/default}">
+
+	<th:block layout:fragment="content-header">            	
+	    <div class="content-header">
+	        <div class="row">
+	            <h2 class="content-title card-title" th:text="${title}"></h2>
+	            <p>로그인 정보 관리</p>
+	        </div>
+	    </div>
+	</th:block>
+	<th:block layout:fragment="content-body">
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select" name="searchCate" id="searchCate">
+							<option value="id" th:selected="${'id' eq searchCate}">회원아이디</option>
+							<option value="name" th:selected="${'name' eq searchCate}">회원이름</option>
+							<option value="grade" th:selected="${'grade' eq searchCate}">회원등급</option>
+							<option value="email" th:selected="${'email' eq searchCate}">회원이메일</option>
+						</select>
+					</div>
+					<div class="col-lg-3 col-md-6 me-auto">
+						<div class="input-group">
+							<input type="text" class="form-control" id="searchValue" 
+								   name="searchValue" th:value="${searchValue}" placeholder="Search">
+							<button class="btn btn-light bg" id="searchBtn" type="button">
+								<i class="material-icons md-search"></i>
+							</button>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select list-size">
+							<option value="5" th:selected="${listSize eq 5}">Show 5</option>
+							<option value="10" th:selected="${listSize eq 10}">Show 10</option>
+							<option value="20" th:selected="${listSize eq 20}">Show 20</option>
+						</select>
+					</div>
+				</div>
+			</header>
+			<!-- card-header end// -->
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr class="text-center text-success">
+								<th>로그인번호</th>
+								<th>회원아이디</th>
+								<th>회원이름</th>
+								<th>회원이메일</th>
+								<th>로그인아이피</th>
+								<th>로그인일시</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:if="${loginList != null}"
+									  th:each="l : ${loginList}">
+								<tr th:if="${l.loginHistory}" 
+									th:each="lh : ${l.loginHistory}" class="text-center">
+									<td th:text="${lh.loginNo}"></td>
+									<td th:text="${l.memberId}"></td>
+									<td th:text="${l.memberName}"></td>
+									<td th:text="${l.memberEmail}"></td>
+									<td th:text="${lh.loginIp}"></td>
+									<td th:text="${lh.loginDate}"></td>
+								</tr>							
+							</th:block>
+							<th:block th:unless="${not #lists.isEmpty(loginList)}">
+								<tr>
+									<td colspan="6">회원 로그인 이력이 없습니다.</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+					<!-- table-responsive.// -->
+				</div>
+			</div>
+			<!-- card-body end// -->
+		</div>
+		<div class="pagination-area mt-15 mb-50">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/admin/login/history}">
+                        	<i class="material-icons md-first_page"></i>
+                        </a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage < 2} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/login/history(currentPage=${currentPage - 1})}">
+                        	<i class="material-icons md-chevron_left"></i>
+                        </a>
+                    </li>
+                    <th:block th:each="num : ${#numbers.sequence(startPageNum, endPageNum)}">
+	                    <li class="page-item" th:classappend="${num == currentPage} ? 'active'">
+	                    	<a class="page-link" th:href="@{/admin/login/history(currentPage=${num})}" 
+	                    	   th:text="${num}">
+	                    	</a>
+	                    </li>
+                    </th:block>
+                    <li class="page-item" th:classappend="${currentPage eq lastPage} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/login/history(currentPage=${currentPage + 1})}">
+                        	<i class="material-icons md-chevron_right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/admin/login/history(currentPage=${lastPage})}">
+                        	<i class="material-icons md-last_page"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+	</th:block>
+	<!--/* 사용자 추가 js file */-->
+    <th:block layout:fragment="customJsResource"></th:block>
+    <!--/* 사용자 추가 js script */-->
+    <th:block layout:fragment="customJs">
+    	<script th:inline="javascript">
+    		
+    	</script>
+    </th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+
